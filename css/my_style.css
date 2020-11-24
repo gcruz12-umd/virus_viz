@@ -1,0 +1,30 @@
+body {
+    font-family:"avenir next", Arial, sans-serif;
+    font-size: 20px;
+    color: #000000;
+    margin-left: 120px;
+  }
+
+  .state {
+    fill: #c0c0c0;
+    stroke: #fff;
+    opacity: 0.8;
+    cursor: pointer;
+  }
+
+  #nav-container {
+    display: flex;
+    cursor: pointer;
+  }
+
+  #source {
+    margin-left: 20px;
+  }
+
+  #source a {
+    color: rgb(130, 49, 49);
+  }
+
+  .label {
+    pointer-events: none;
+  }

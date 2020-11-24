@@ -3,12 +3,16 @@
   <meta charset="utf-8">
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v1.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <link rel="stylesheet" href="css/my_style.css">
   <style>
     body {
       font-family:"avenir next", Arial, sans-serif;
-      font-size: 12px;
-      color: #696969;
-      margin-left: 120px;
+      font-size: 20px;
+      color: #3f3f3f;
+      margin-left: 10%;
+      margin-right: 10%;
     }
 
     .state {
@@ -28,7 +32,11 @@
     }
 
     #source a {
-      color: #293a0c;
+      color: #5c5c5c;
+    }
+
+    #tooltip {
+      background-color: #ffffff;
     }
 
     .label {
@@ -38,23 +46,74 @@
 </head>
 
 <body>
-
-    <div id="nav-container">
-        <div id="pubDropdown"></div>
+    <div>
+      <h2>COVID in the US: Identifying outliers</h3>
+      <h3>Identifying social factors that play an important role in the
+        transmission of COVID-19 using state and county demographic data.</h5>
     </div>
 
     <div>
+      <h4>Background</h4>
+      <p>As it stands, the data is being gathered from the NYTimes covid data tracker https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv). This data contains the total case and death counts for each county in the continental US.</p>
+
+      <p>
+        This data was then joined with County level datasets from US Department of Government's Economic Research Service. (https://catalog.data.gov/dataset/county-level-data-sets). 
+      </p>
+
+      <p>
+        The purpose of this cholorpleth map is to demonstrate to the user states/counties where the association between the chosen variable and total covid deaths for the state/counties deviate high or low from the expected amount.
+      </p>
+
+      <p>
+        The expected amount is defined as the predicted count of deaths after creating a linear model where the criterion variable is the count of deaths, and the predictor variable is the variable chosen by the user at the dropdown. 
+      </p>
+
+      <p>
+        To determine the variance, the following formula is used: 
+
+        variance = actual - expected / actual
+      </p>
+
+      <p>
+        In order to create the graph the variances are determined for each respective municipality in relation to the scope (ie, states at the national level, county at the state levels). The hue is determined by gathering all the variances for all municipalities in scope and determining the values of what would be the edges of the outliers. These were determined by using the simple 1.5 * interquartile range formulas.
+      </p>
+     </div>
+
+
+    <div>
         <select id="d3-dropdown">
-        <option>Please Select An Option</option>
-        <option value="Unemployed 2019">Unemployed 2019</option>
-        <option value="high school diploma">high school diploma</option>
-        <option value="third">Third</option>
-        <option value="forth">Forth</option>
+          <option>Please Select An Option</option>
+          <option value="Unemployed 2019">Unemployed 2019</option>
+          <option value="high school diploma">high school diploma</option>
+          <option value="third">Third</option>
+          <option value="forth">Forth</option>
         </select>
     </div>
 
-    <div id="vis"></div>
-    <div id="tooltip"></div>
+    <div id="tooltip" class = "blur"></div>
+
+    <div id="legend1" style="display: inline-block"></div>
+    <div id="map" style="display: inline-block"></div>
+
+    <div>
+      <h4>Instructions</h4>
+      <p>
+        In order to use this visualization first select a variable that you would like to analyze. We will call this variable X.
+      </p>
+      <p>
+        States colored more towards yellow mean that those states have more COVID deaths than expected given the quantity of X variable. 
+      </p>
+
+      <p>
+        To switch scope to states, simply click on the state of interest. The color ranges will change since all of the counties will have variances relative to each other.
+      </p>
+      <p>
+        Note: You can move from state to state by clicking outside of the state you are currently zoomed into without zooming out to the national level.
+      </p>
+      <p>
+        To zoom out to the national level simply click anywhere in the state.
+      </p>
+    </div>
 
 <script src="scripts/visualization.js"></script>
 
