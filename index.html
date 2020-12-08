@@ -79,21 +79,34 @@
       </p>
      </div>
 
-
+    <h4>Choose a socioeconomic factor</h4>
     <div>
         <select id="d3-dropdown">
           <option>Please Select An Option</option>
           <option value="Unemployed 2019">Unemployed 2019</option>
           <option value="high school diploma">high school diploma</option>
-          <option value="third">Third</option>
-          <option value="forth">Forth</option>
+          <option value="Labor Force">Labor Force</option>
+          <option value="2019 Net Migration">2019 Net Migration</option>
         </select>
     </div>
 
+    <h4>Choose an instance type</h4>
+    <div>
+      <select id="d3-dropdown_cases">
+        <option>Please Select An Option</option>
+        <option value="Cases">Cases</option>
+        <option value="Deaths">Deaths</option>
+      </select>
+    </div>
+
+    <button type="button" id="submit" onclick="create_viz()">Click Me to Visualize</button>
+
     <div id="tooltip" class = "blur"></div>
 
-    <div id="legend1" style="display: inline-block"></div>
     <div id="map" style="display: inline-block"></div>
+    <div id="legend1" style="display: inline-block"></div>
+
+    <div id="stats" style="display: inline-block"></div>
 
     <div>
       <h4>Instructions</h4>

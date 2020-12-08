@@ -1,5 +1,5 @@
 //import {legend} from "@d3/color-legend"
-
+//
 function linearRegression(y,x){
     var lr = {};
     var n = y.length;
@@ -92,7 +92,7 @@ function continuous(selector_id, colorscale) {
       .call(legendaxis);
 };
 
-d3.select("#selected-dropdown").text("Unemployed 2019");
+//d3.select("#selected-dropdown").text("Unemployed 2019");
 
 var tooltip = d3.select("#tooltip")
             .style("position", "absolute")
@@ -100,12 +100,14 @@ var tooltip = d3.select("#tooltip")
             .style("visibility", "hidden")
             .text("a simple tooltip");
 
-d3.select("select")
-    .on("change",function(d){
+//d3.select("select")
+//    .on("change",function(d){
+function create_viz(){    
         d3.selectAll("svg").remove();
 
         var selected = d3.select("#d3-dropdown").node().value;
-        //console.log( selected );
+        var selected_cases = d3.select("#d3-dropdown_cases").node().value;
+        
         
         var width = 960
         var height = 600
@@ -126,7 +128,8 @@ d3.select("select")
             .attr('width', width)
             .attr('height', height)
         
-        d3.queue()
+        if (selected_cases === "Deaths"){
+            d3.queue()
             .defer(d3.csv, 'data/data.csv', function (d) {
                 return {
                     id: +(d.state + d.county),
@@ -137,13 +140,33 @@ d3.select("select")
                     cases: +d.cases,
                     deaths: +d.deaths,
                     labor_force: +d.Civilian_labor_force_2019,
-                    R_NET_MIG_2019: +d.R_NET_MIG_2019
+                    R_NET_MIG_2019: +d.R_NET_MIG_2019,
+                    county_name: d.County_name
                 }
             })
             .defer(d3.json, 'data/us-states.json')
             .defer(d3.json, 'data/us-counties.json')
             .awaitAll(initialize)
-        
+        } else {
+        d3.queue()
+            .defer(d3.csv, 'data/data.csv', function (d) {
+                return {
+                    id: +(d.state + d.county),
+                    state: d.state,
+                    county: d.county,
+                    unemployment: +d.Unemployed_2019,
+                    highschool: +d.high_school_diploma,
+                    cases: +d.deaths,
+                    deaths: +d.cases,
+                    labor_force: +d.Civilian_labor_force_2019,
+                    R_NET_MIG_2019: +d.R_NET_MIG_2019,
+                    county_name: d.County_name
+                }
+            })
+            .defer(d3.json, 'data/us-states.json')
+            .defer(d3.json, 'data/us-counties.json')
+            .awaitAll(initialize)
+        }
         function initialize(error, results) {
             if (error) { throw error }
 
@@ -235,7 +258,7 @@ d3.select("select")
                 for (i = 0; i < states_array.length; i++){
                     //console.log(id, states_array[i].id)
                     if (states_array[i].id > id && states_array[i].id < id + 1000){
-                        console.log(id, states_array[i].id)
+                        //console.log(id, states_array[i].id)
                         list_of_vars.push(states_array[i][variable]);
                     }
                 }
@@ -251,7 +274,15 @@ d3.select("select")
                     placeholder = "unemployment";
                 } else if (selected === "high school diploma"){
                     placeholder = "highschool";
+                
+                } else if (selected === "Labor Force"){
+                    placeholder = "labor_force";
+
+                } else if (selected === "2019 Net Migration"){
+                    placeholder = "R_NET_MIG_2019";
                 }
+
+                console.log(placeholder)
 
                 // Copy the values, rather than operating on references to existing values
                 var cases_array;
@@ -262,7 +293,7 @@ d3.select("select")
                 } else if (state === false){
                     someArray = build_county_color_array(placeholder, d);
                     cases_array = cases_deaths(d)["county_deaths"]
-                    console.log(cases_array)
+                    //console.log(cases_array)
                     //cases_array = cases_array.filter(function (item) {
                     //    return item.id > id && item.id < id + 1000
                     //})
@@ -270,8 +301,14 @@ d3.select("select")
 
                 regression_coefficients = linearRegression(cases_array, someArray)
                 //console.log(cases_array, someArray)
-                console.log(regression_coefficients)
+                //console.log(regression_coefficients)
                 var predicted_values = someArray.map(i => i * regression_coefficients.slope + regression_coefficients.intercept);
+                
+                var child = document.createElement('p');
+                child.setAttribute("id", "formula");
+                child.innerHTML = "Expected = " + placeholder + " * " + regression_coefficients.slope + " + " + regression_coefficients.intercept;
+                d3.selectAll("#formula").remove();
+                document.getElementById('stats').appendChild(child);
 
                 var i;
                 var variances = [];
@@ -299,8 +336,14 @@ d3.select("select")
                 iqr = q3 - q1;
                 maxValue = q3 + iqr*1.5;
                 minValue = q1 - iqr*1.5;
+
+                var child = document.createElement('p');
+                child.setAttribute("id", "outlier");
+                child.innerHTML = "Outlier Edge Values = " + minValue + " to " + maxValue;
+                d3.selectAll("#outlier").remove();
+                document.getElementById('stats').appendChild(child);
                 
-                console.log([minValue, maxValue])
+                //console.log([minValue, maxValue])
 
                 var colorScale1 = d3.scaleSequential(d3.interpolatePlasma)
                     .domain([minValue, maxValue]);
@@ -311,7 +354,7 @@ d3.select("select")
 
             function get_variance_of_attr(actual,i){
                 var predicted = i * regression_coefficients.slope + regression_coefficients.intercept;
-                console.log(actual, i, predicted, (predicted - actual)/actual)
+                //console.log(actual, i, predicted, (predicted - actual)/actual)
                 return (predicted - actual)/actual
             }
 
@@ -325,11 +368,15 @@ d3.select("select")
                     placeholder = d.properties.unemployment;
                 } else if (selected === "high school diploma"){
                     placeholder = d.properties.highschool;
+                } else if (selected === "Labor Force"){
+                    placeholder = d.properties.labor_force;
+                } else if (selected === "2019 Net Migration"){
+                    placeholder = d.properties.R_NET_MIG_2019;
                 }
+                
                 //console.log(placeholder)
                 return placeholder;
             }
-
 
             function get_text(d){
                 var placeholder;
@@ -338,11 +385,15 @@ d3.select("select")
                     placeholder = d.properties.unemployment;
                 } else if (selected === "high school diploma"){
                     placeholder = d.properties.highschool;
+                } else if (selected === "Labor Force"){
+                    placeholder = d.properties.labor_force;
+                } else if (selected === "2019 Net Migration"){
+                    placeholder = d.properties.R_NET_MIG_2019;
                 }
+
                 //console.log(placeholder)
-                return selected + ":"+ placeholder + "  |  " + "Deaths : " + d.properties.deaths + " | Variance = " + get_variance_of_attr(d.properties.deaths,get_attribute(d));
+                return d.properties.county_name + "  |  " + selected + ":"+ placeholder + "  |  " + "Instances : " + d.properties.deaths + " | Variance = " + get_variance_of_attr(d.properties.deaths,get_attribute(d));
             }
-        
         
             var statePaths = svg.selectAll('.state')
                 .data(states)
@@ -419,4 +470,4 @@ d3.select("select")
                     .remove()
             }
         }
-    })
+    }
