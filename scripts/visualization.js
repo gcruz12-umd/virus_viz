@@ -306,7 +306,8 @@ function create_viz(){
                 
                 var child = document.createElement('p');
                 child.setAttribute("id", "formula");
-                child.innerHTML = "Expected = " + placeholder + " * " + regression_coefficients.slope + " + " + regression_coefficients.intercept;
+                child.innerHTML = "Expected = " + placeholder + " * " + regression_coefficients.slope + " + " + regression_coefficients.intercept + "<br>" + 
+                                    "R2 value  = " + regression_coefficients.r2;
                 d3.selectAll("#formula").remove();
                 document.getElementById('stats').appendChild(child);
 
