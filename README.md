@@ -3,7 +3,7 @@
 ## COVID in the US: Identifying outliers
 ### Identifying social factors that play an important role in the transmission of COVID-19 using state and county demographic data.
 
-**Link**
+**Project Link**
 
 https://gcruz12-umd.github.io/virus_viz/
 
