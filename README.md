@@ -21,7 +21,7 @@ To determine the Standard Error as a percentage, the following formula is used:
 
 *SE = (actual_value - predicted_value) / actual_value*
 
-In order to create the graph, the Standard Errors(as percentages) are determined for each respective municipality in relation to the scope (ie, states at the national level, county at the state levels). The hue is determined by gathering all the Standard Errors for all municipalities in scope and determining the values of what would be the edges of the outliers. These were determined by using the following fomula:
+In order to create the graph, the Standard Errors(as percentages) are determined for each respective municipality in relation to the scope (ie, states at the national level, county at the state levels). The hue is determined by gathering all the Standard Errors for all municipalities in scope and determining the values of what would be the edges of the outliers. These were determined by using the following formulas:
 
 *IQR = Q3 – Q1*
 

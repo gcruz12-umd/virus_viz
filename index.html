@@ -61,22 +61,26 @@
       </p>
 
       <p>
-        The purpose of this cholorpleth map is to demonstrate to the user states/counties where the association between the chosen variable and total covid deaths for the state/counties deviate high or low from the expected amount.
+        The purpose of this chloropleth map is to demonstrate to the user states/counties where the association between the chosen variable and total COVID deaths or cases for the state/counties deviate high or low from the expected amount. Because of this, the intended audience of this visualization is public officials that are aiming to use high level data like this, along with low level boots-on-the-ground knowledge in order to make data driven decisions. 
       </p>
 
       <p>
-        The expected amount is defined as the predicted count of deaths after creating a linear model where the criterion variable is the count of deaths, and the predictor variable is the variable chosen by the user at the dropdown. 
+        The expected amount is defined as the predicted count of deaths after creating a linear model where the criterion variable is the count of instances (cases or deaths, chosen by user), and the predictor variable is the variable chosen by the user at the dropdown.
       </p>
 
       <p>
-        To determine the variance, the following formula is used: 
+        To determine the Standard Error as a percentage, the following formula is used: 
 
-        variance = actual - expected / actual
+        <em>SE = (actual_value - predicted_value) / actual_value*</em>
       </p>
 
       <p>
-        In order to create the graph the variances are determined for each respective municipality in relation to the scope (ie, states at the national level, county at the state levels). The hue is determined by gathering all the variances for all municipalities in scope and determining the values of what would be the edges of the outliers. These were determined by using the simple 1.5 * interquartile range formulas.
+        In order to create the graph, the Standard Errors(as percentages) are determined for each respective municipality in relation to the scope (ie, states at the national level, county at the state levels). The hue is determined by gathering all the Standard Errors for all municipalities in scope and determining the values of what would be the edges of the outliers. These were determined by using the following formulas:
       </p>
+
+      <p><em>IQR = Q3 – Q1</em></p>
+      <p><em>Lower Limit = Q1 - (1.5 \* IQR)</em></p>
+      <p><em>Upper Limit = Q3 + (1.5 \* IQR)</em></p>
      </div>
 
     <h4>Choose a socioeconomic factor</h4>
@@ -111,10 +115,10 @@
     <div>
       <h4>Instructions</h4>
       <p>
-        In order to use this visualization first select a variable that you would like to analyze. We will call this variable X.
+        In order to use this visualization first select a variable(socioeconomic factor) that you would like to analyze. We will call this variable X. You will then have to select an instance type (cases/deaths). This will be the Y value that the linear model will try to predict from the X value.
       </p>
       <p>
-        States colored more towards yellow mean that those states have more COVID deaths than expected given the quantity of X variable. 
+        Note: States colored more towards yellow mean that those states have more instances (cases or deaths) than expected given the quantity of X variable. 
       </p>
 
       <p>
